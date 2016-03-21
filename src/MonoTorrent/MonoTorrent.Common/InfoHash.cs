@@ -80,7 +80,7 @@ namespace MonoTorrent
 
         public string UrlEncode()
         {
-            return UriHelper.UrlEncode(Hash);
+            return UriHelper.UrlEncode(Hash, true);
         }
 
         public static bool operator ==(InfoHash left, InfoHash right)

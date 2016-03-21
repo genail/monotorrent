@@ -44,14 +44,14 @@ namespace MonoTorrent
     {
         static readonly char [] hexChars = "0123456789abcdef".ToCharArray ();
 
-        public static string UrlEncode (byte[] bytes)
+        public static string UrlEncode (byte[] bytes, bool encodeAll = false)
         {
             if (bytes == null)
                 throw new ArgumentNullException ("bytes");
 
             var result = new MemoryStream (bytes.Length);
             for (int i = 0; i < bytes.Length; i++)
-                UrlEncodeChar ((char)bytes [i], result, false);
+                UrlEncodeChar ((char)bytes [i], result, false, encodeAll);
 
             return Encoding.ASCII.GetString (result.ToArray());
         }
@@ -99,12 +99,12 @@ namespace MonoTorrent
             return bytes.ToArray ();
         }
 
-        static void UrlEncodeChar (char c, Stream result, bool isUnicode) {
-            if (c > ' ' && NotEncoded (c)) {
+        static void UrlEncodeChar (char c, Stream result, bool isUnicode, bool encodeAll = false) {
+            if (!encodeAll && c > ' ' && NotEncoded (c)) {
                 result.WriteByte ((byte)c);
                 return;
             }
-            if (c==' ') {
+            if (!encodeAll && c==' ') {
                 result.WriteByte ((byte)'+');
                 return;
             }
