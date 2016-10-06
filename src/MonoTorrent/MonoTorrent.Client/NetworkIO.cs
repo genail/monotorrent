@@ -72,18 +72,24 @@ namespace MonoTorrent.Client
 
         static NetworkIO()
         {
-            ClientEngine.MainLoop.QueueTimeout(TimeSpan.FromMilliseconds(100), delegate {
+            ClientEngine.MainLoop.QueueTimeout(TimeSpan.FromMilliseconds(10), delegate
+            {
                 lock (sendQueue)
                 {
                     int count = sendQueue.Count;
                     for (int i = 0; i < count; i++)
-                         SendOrEnqueue (sendQueue.Dequeue ());
+                        SendOrEnqueue(sendQueue.Dequeue());
                 }
+                return true;
+            });
+
+            ClientEngine.MainLoop.QueueTimeout(TimeSpan.FromMilliseconds(10), delegate
+            {
                 lock (receiveQueue)
                 {
                     int count = receiveQueue.Count;
                     for (int i = 0; i < count; i++)
-                        ReceiveOrEnqueue (receiveQueue.Dequeue ());
+                        ReceiveOrEnqueue(receiveQueue.Dequeue());
                 }
                 return true;
             });
